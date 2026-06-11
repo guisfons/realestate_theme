@@ -152,15 +152,19 @@ get_header();
                             <?php the_content(); ?>
                         </div>
 
+                        <?php 
+                        $features = get_post_meta( get_the_ID(), '_features', true );
+                        if (!empty($features) && is_array($features)) : 
+                        ?>
                         <div class="property-features-list">
                             <h3>Diferenciais</h3>
                             <div class="features-grid">
-                                <span><i data-lucide="check"></i> Cozinha Americana</span>
-                                <span><i data-lucide="check"></i> Quintal</span>
-                                <span><i data-lucide="check"></i> Churrasqueira</span>
-                                <span><i data-lucide="check"></i> Varanda Gourmet</span>
+                                <?php foreach ($features as $feature) : ?>
+                                    <span><i data-lucide="check"></i> <?php echo esc_html($feature); ?></span>
+                                <?php endforeach; ?>
                             </div>
                         </div>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Sidebar Contact -->

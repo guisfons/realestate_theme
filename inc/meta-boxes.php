@@ -123,6 +123,14 @@ function taipas_imovel_details_callback($post) {
             <input type="number" id="taipas_parking" name="taipas_parking" value="<?php echo esc_attr($parking); ?>">
         </div>
         <div class="taipas-meta-field taipas-meta-full">
+            <label for="taipas_features">Diferenciais (Separados por vírgula)</label>
+            <?php 
+            $features = get_post_meta($post->ID, '_features', true); 
+            $features_val = is_array($features) ? implode(', ', $features) : '';
+            ?>
+            <input type="text" id="taipas_features" name="taipas_features" value="<?php echo esc_attr($features_val); ?>" placeholder="Ex: Cozinha Americana, Quintal, Churrasqueira, Varanda Gourmet">
+        </div>
+        <div class="taipas-meta-field taipas-meta-full">
             <label>Galeria de Fotos (Outras imagens)</label>
             <div id="taipas-gallery-container">
                 <div class="taipas-gallery-previews" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
@@ -370,6 +378,13 @@ function taipas_save_imovel_meta_data($post_id) {
         if (isset($_POST[$post_key])) {
             update_post_meta($post_id, $meta_key, sanitize_text_field($_POST[$post_key]));
         }
+    }
+
+    // Save Features
+    if (isset($_POST['taipas_features'])) {
+        $features_raw = sanitize_text_field($_POST['taipas_features']);
+        $features_array = array_filter(array_map('trim', explode(',', $features_raw)));
+        update_post_meta($post_id, '_features', $features_array);
     }
 
     // Handle Proprietário selection
