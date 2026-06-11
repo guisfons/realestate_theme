@@ -38,10 +38,10 @@
                 <h4>Contato</h4>
                 <ul>
                     <?php if ( get_theme_mod( 'contact_address', 'Av. Raimundo Pereira de Magalhães, 1234' ) ) : ?>
-                        <li><i data-lucide="map-pin"></i> <?php echo esc_html( get_theme_mod( 'contact_address', 'Av. Raimundo Pereira de Magalhães, 1234' ) ); ?></li>
+                        <li><i data-lucide="map-pin"></i> <?php echo get_theme_mod( 'contact_address', 'Av. Raimundo Pereira de Magalhães, 1234' ); ?></li>
                     <?php endif; ?>
                     <?php if ( get_theme_mod( 'contact_phone', '(11) 3941-0000' ) ) : ?>
-                        <li><i data-lucide="phone"></i> <?php echo esc_html( get_theme_mod( 'contact_phone', '(11) 3941-0000' ) ); ?></li>
+                        <li><i data-lucide="phone"></i> <?php echo get_theme_mod( 'contact_phone', '(11) 3941-0000' ); ?></li>
                     <?php endif; ?>
                     <?php if ( get_theme_mod( 'contact_email', 'contato@taipasimoveis.com.br' ) ) : ?>
                         <li><i data-lucide="mail"></i> <a href="mailto:<?php echo antispambot( get_theme_mod( 'contact_email', 'contato@taipasimoveis.com.br' ) ); ?>" style="color: inherit; text-decoration: none;"><?php echo antispambot( get_theme_mod( 'contact_email', 'contato@taipasimoveis.com.br' ) ); ?></a></li>
