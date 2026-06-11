@@ -664,3 +664,63 @@ function taipas_imovel_admin_filters() {
     }
 }
 add_action('restrict_manage_posts', 'taipas_imovel_admin_filters');
+
+/**
+ * Theme Customizer Settings
+ */
+function taipas_modern_customize_register( $wp_customize ) {
+    // Footer Section
+    $wp_customize->add_section( 'taipas_footer_section', array(
+        'title'       => __( 'Rodapé e Contatos', 'taipas-modern' ),
+        'priority'    => 120,
+    ) );
+
+    // Footer Text Setting
+    $wp_customize->add_setting( 'footer_text', array(
+        'default'           => 'Especialistas em realizar sonhos na região de Taipas e Jaraguá. Atendimento personalizado e as melhores opções de financiamento.',
+        'sanitize_callback' => 'wp_kses_post',
+    ) );
+
+    $wp_customize->add_control( 'footer_text', array(
+        'label'    => __( 'Texto do Rodapé', 'taipas-modern' ),
+        'section'  => 'taipas_footer_section',
+        'type'     => 'textarea',
+    ) );
+
+    // Contact Address
+    $wp_customize->add_setting( 'contact_address', array(
+        'default'           => 'Av. Raimundo Pereira de Magalhães, 1234',
+        'sanitize_callback' => 'sanitize_text_field',
+    ) );
+
+    $wp_customize->add_control( 'contact_address', array(
+        'label'    => __( 'Endereço', 'taipas-modern' ),
+        'section'  => 'taipas_footer_section',
+        'type'     => 'text',
+    ) );
+
+    // Contact Phone
+    $wp_customize->add_setting( 'contact_phone', array(
+        'default'           => '(11) 3941-0000',
+        'sanitize_callback' => 'sanitize_text_field',
+    ) );
+
+    $wp_customize->add_control( 'contact_phone', array(
+        'label'    => __( 'Telefone', 'taipas-modern' ),
+        'section'  => 'taipas_footer_section',
+        'type'     => 'text',
+    ) );
+
+    // Contact Email
+    $wp_customize->add_setting( 'contact_email', array(
+        'default'           => 'contato@taipasimoveis.com.br',
+        'sanitize_callback' => 'sanitize_email',
+    ) );
+
+    $wp_customize->add_control( 'contact_email', array(
+        'label'    => __( 'E-mail', 'taipas-modern' ),
+        'section'  => 'taipas_footer_section',
+        'type'     => 'email',
+    ) );
+}
+add_action( 'customize_register', 'taipas_modern_customize_register' );

@@ -5,7 +5,7 @@
         <div class="footer-grid">
             <div class="footer-info">
                 <figure class="footer-logo"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-full.webp" alt="logo"></figure>
-                <p>Especialistas em realizar sonhos na região de Taipas e Jaraguá. Atendimento personalizado e as melhores opções de financiamento.</p>
+                <p><?php echo wp_kses_post( get_theme_mod( 'footer_text', 'Especialistas em realizar sonhos na região de Taipas e Jaraguá. Atendimento personalizado e as melhores opções de financiamento.' ) ); ?></p>
                 <div class="social-links">
                     <a href="#"><i data-lucide="instagram"></i></a>
                     <a href="#"><i data-lucide="facebook"></i></a>
@@ -37,16 +37,22 @@
             <div class="footer-contact">
                 <h4>Contato</h4>
                 <ul>
-                    <li><i data-lucide="map-pin"></i> Av. Raimundo Pereira de Magalhães, 1234</li>
-                    <li><i data-lucide="phone"></i> (11) 3941-0000</li>
-                    <li><i data-lucide="mail"></i> contato@taipasimoveis.com.br</li>
+                    <?php if ( get_theme_mod( 'contact_address', 'Av. Raimundo Pereira de Magalhães, 1234' ) ) : ?>
+                        <li><i data-lucide="map-pin"></i> <?php echo esc_html( get_theme_mod( 'contact_address', 'Av. Raimundo Pereira de Magalhães, 1234' ) ); ?></li>
+                    <?php endif; ?>
+                    <?php if ( get_theme_mod( 'contact_phone', '(11) 3941-0000' ) ) : ?>
+                        <li><i data-lucide="phone"></i> <?php echo esc_html( get_theme_mod( 'contact_phone', '(11) 3941-0000' ) ); ?></li>
+                    <?php endif; ?>
+                    <?php if ( get_theme_mod( 'contact_email', 'contato@taipasimoveis.com.br' ) ) : ?>
+                        <li><i data-lucide="mail"></i> <a href="mailto:<?php echo antispambot( get_theme_mod( 'contact_email', 'contato@taipasimoveis.com.br' ) ); ?>" style="color: inherit; text-decoration: none;"><?php echo antispambot( get_theme_mod( 'contact_email', 'contato@taipasimoveis.com.br' ) ); ?></a></li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
     </div>
     <div class="footer-bottom">
         <div class="container">
-            <p>&copy; <?php echo date('Y'); ?> Taipas Imóveis. Todos os direitos reservados.</p>
+            <p>&copy; <?php echo date('Y'); ?> <?php echo get_bloginfo('name'); ?>. Todos os direitos reservados.</p>
         </div>
     </div>
 </footer>
