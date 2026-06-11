@@ -359,9 +359,32 @@ function taipas_save_imovel_meta_data($post_id) {
         return;
     }
 
+    // Validate Property Code uniqueness
+    if (isset($_POST['taipas_property_code'])) {
+        $new_code = sanitize_text_field($_POST['taipas_property_code']);
+        if (!empty($new_code)) {
+            $existing = get_posts([
+                'post_type' => 'imovel',
+                'post_status' => 'any',
+                'meta_key' => '_property_code',
+                'meta_value' => $new_code,
+                'post__not_in' => [$post_id],
+                'posts_per_page' => 1,
+                'fields' => 'ids'
+            ]);
+            
+            if (!empty($existing)) {
+                set_transient('taipas_duplicate_code_' . get_current_user_id(), true, 45);
+            } else {
+                update_post_meta($post_id, '_property_code', $new_code);
+            }
+        } else {
+            update_post_meta($post_id, '_property_code', '');
+        }
+    }
+
     $fields = [
         'taipas_property_title' => '_property_title',
-        'taipas_property_code' => '_property_code',
         'taipas_price' => '_price',
         'taipas_area' => '_area',
         'taipas_beds' => '_beds',

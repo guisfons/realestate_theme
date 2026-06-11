@@ -509,8 +509,12 @@ add_action('manage_proprietario_posts_custom_column', 'taipas_proprietario_custo
 function taipas_imovel_columns($columns) {
     $new_columns = [];
     foreach ($columns as $key => $value) {
+        if ($key === 'title') {
+            $new_columns['property_thumb'] = 'Imagem';
+        }
         $new_columns[$key] = $value;
         if ($key === 'title') {
+            $new_columns['property_code'] = 'Código';
             $new_columns['property_owner'] = 'Proprietário';
             $new_columns['property_location'] = 'Localização (CEP)';
             $new_columns['property_fees'] = 'Condomínio / IPTU';
@@ -521,7 +525,21 @@ function taipas_imovel_columns($columns) {
 add_filter('manage_imovel_posts_columns', 'taipas_imovel_columns');
 
 function taipas_imovel_custom_column($column, $post_id) {
-    if ($column === 'property_owner') {
+    if ($column === 'property_thumb') {
+        if (has_post_thumbnail($post_id)) {
+            echo get_the_post_thumbnail($post_id, [60, 60], ['style' => 'border-radius: 4px; object-fit: cover; width: 60px; height: 60px;']);
+        } else {
+            $thumb_url = get_post_meta($post_id, '_thumbnail_url', true);
+            if ($thumb_url) {
+                echo '<img src="' . esc_url($thumb_url) . '" style="border-radius: 4px; object-fit: cover; width: 60px; height: 60px;" alt="Thumbnail">';
+            } else {
+                echo '—';
+            }
+        }
+    } elseif ($column === 'property_code') {
+        $code = get_post_meta($post_id, '_property_code', true);
+        echo $code ? esc_html($code) : '—';
+    } elseif ($column === 'property_owner') {
         $owner_id = get_post_meta($post_id, '_proprietario_id', true);
         if ($owner_id) {
             $owner = get_post($owner_id);
@@ -554,6 +572,20 @@ function taipas_imovel_custom_column($column, $post_id) {
     }
 }
 add_action('manage_imovel_posts_custom_column', 'taipas_imovel_custom_column', 10, 2);
+
+/**
+ * Admin notices for Imovel
+ */
+function taipas_imovel_admin_notices() {
+    $screen = get_current_screen();
+    if ($screen && $screen->id === 'imovel') {
+        if (get_transient('taipas_duplicate_code_' . get_current_user_id())) {
+            echo '<div class="notice notice-error is-dismissible"><p><strong>Erro:</strong> Já existe um imóvel cadastrado com este Código. O código informado não foi salvo e precisa ser alterado.</p></div>';
+            delete_transient('taipas_duplicate_code_' . get_current_user_id());
+        }
+    }
+}
+add_action('admin_notices', 'taipas_imovel_admin_notices');
 
 /**
  * Register Print Ficha sidebar meta box
