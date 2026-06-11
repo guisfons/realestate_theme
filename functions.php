@@ -527,11 +527,11 @@ add_filter('manage_imovel_posts_columns', 'taipas_imovel_columns');
 function taipas_imovel_custom_column($column, $post_id) {
     if ($column === 'property_thumb') {
         if (has_post_thumbnail($post_id)) {
-            echo get_the_post_thumbnail($post_id, [60, 60], ['style' => 'border-radius: 4px; object-fit: cover; width: 60px; height: 60px;']);
+            echo get_the_post_thumbnail($post_id, [120, 80], ['style' => 'border-radius: 6px; object-fit: cover; width: 120px; height: 80px;']);
         } else {
             $thumb_url = get_post_meta($post_id, '_thumbnail_url', true);
             if ($thumb_url) {
-                echo '<img src="' . esc_url($thumb_url) . '" style="border-radius: 4px; object-fit: cover; width: 60px; height: 60px;" alt="Thumbnail">';
+                echo '<img src="' . esc_url($thumb_url) . '" style="border-radius: 6px; object-fit: cover; width: 120px; height: 80px;" alt="Thumbnail">';
             } else {
                 echo '—';
             }
@@ -586,6 +586,17 @@ function taipas_imovel_admin_notices() {
     }
 }
 add_action('admin_notices', 'taipas_imovel_admin_notices');
+
+/**
+ * Custom CSS for Admin columns
+ */
+function taipas_admin_columns_css() {
+    echo '<style>
+        .column-property_thumb { width: 130px; }
+        .column-property_code { width: 100px; }
+    </style>';
+}
+add_action('admin_head', 'taipas_admin_columns_css');
 
 /**
  * Register Print Ficha sidebar meta box
