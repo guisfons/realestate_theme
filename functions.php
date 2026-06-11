@@ -690,19 +690,19 @@ function taipas_modern_customize_register( $wp_customize ) {
     // Contact Address
     $wp_customize->add_setting( 'contact_address', array(
         'default'           => 'Av. Raimundo Pereira de Magalhães, 1234',
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ) );
 
     $wp_customize->add_control( 'contact_address', array(
         'label'    => __( 'Endereço', 'taipas-modern' ),
         'section'  => 'taipas_footer_section',
-        'type'     => 'text',
+        'type'     => 'textarea',
     ) );
 
     // Contact Phone
     $wp_customize->add_setting( 'contact_phone', array(
         'default'           => '(11) 3941-0000',
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ) );
 
     $wp_customize->add_control( 'contact_phone', array(
