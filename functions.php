@@ -527,11 +527,11 @@ add_filter('manage_imovel_posts_columns', 'taipas_imovel_columns');
 function taipas_imovel_custom_column($column, $post_id) {
     if ($column === 'property_thumb') {
         if (has_post_thumbnail($post_id)) {
-            echo get_the_post_thumbnail($post_id, [120, 80], ['style' => 'border-radius: 6px; object-fit: cover; width: 120px; height: 80px;']);
+            echo get_the_post_thumbnail($post_id, [180, 120], ['style' => 'border-radius: 6px; object-fit: cover; width: 180px; height: 120px;']);
         } else {
             $thumb_url = get_post_meta($post_id, '_thumbnail_url', true);
             if ($thumb_url) {
-                echo '<img src="' . esc_url($thumb_url) . '" style="border-radius: 6px; object-fit: cover; width: 120px; height: 80px;" alt="Thumbnail">';
+                echo '<img src="' . esc_url($thumb_url) . '" style="border-radius: 6px; object-fit: cover; width: 180px; height: 120px;" alt="Thumbnail">';
             } else {
                 echo '—';
             }
@@ -592,7 +592,7 @@ add_action('admin_notices', 'taipas_imovel_admin_notices');
  */
 function taipas_admin_columns_css() {
     echo '<style>
-        .column-property_thumb { width: 130px; }
+        .column-property_thumb { width: 190px; }
         .column-property_code { width: 100px; }
     </style>';
 }
