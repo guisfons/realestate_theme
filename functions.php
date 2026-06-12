@@ -822,25 +822,7 @@ function taipas_imovel_search_query( $query ) {
 
         // 3. Localização (Bairro, Cidade, CEP) OU Código do Imóvel (SKU / hero search)
         if ( ! empty( $_GET['localizacao'] ) ) {
-            $loc = sanitize_text_field( $_GET['localizacao'] );
-            $meta_query[] = array(
-                'relation' => 'OR',
-                array(
-                    'key'     => '_address',
-                    'value'   => $loc,
-                    'compare' => 'LIKE'
-                ),
-                array(
-                    'key'     => '_cep',
-                    'value'   => $loc,
-                    'compare' => 'LIKE'
-                ),
-                array(
-                    'key'     => '_property_code',
-                    'value'   => $loc,
-                    'compare' => 'LIKE'
-                )
-            );
+            $query->set( 'custom_localizacao_search', sanitize_text_field( $_GET['localizacao'] ) );
         }
 
         // 4. Código do Imóvel Específico (Advanced Search - SKU)
@@ -880,3 +862,35 @@ function taipas_imovel_search_query( $query ) {
     }
 }
 add_action( 'pre_get_posts', 'taipas_imovel_search_query' );
+
+/**
+ * Filter SQL to search across title, content, and specific meta fields for 'localizacao'
+ */
+add_filter('posts_join', function($join, $query) {
+    global $wpdb;
+    if ( ! is_admin() && $query->is_main_query() && $query->get('custom_localizacao_search') ) {
+        $join .= " LEFT JOIN {$wpdb->postmeta} AS pm_loc ON {$wpdb->posts}.ID = pm_loc.post_id ";
+    }
+    return $join;
+}, 10, 2);
+
+add_filter('posts_where', function($where, $query) {
+    global $wpdb;
+    if ( ! is_admin() && $query->is_main_query() && $query->get('custom_localizacao_search') ) {
+        $keyword = esc_sql( $wpdb->esc_like( $query->get('custom_localizacao_search') ) );
+        $where .= " AND (
+            ({$wpdb->posts}.post_title LIKE '%{$keyword}%')
+            OR ({$wpdb->posts}.post_content LIKE '%{$keyword}%')
+            OR (pm_loc.meta_key IN ('_address', '_cep', '_property_code') AND pm_loc.meta_value LIKE '%{$keyword}%')
+        )";
+    }
+    return $where;
+}, 10, 2);
+
+add_filter('posts_groupby', function($groupby, $query) {
+    global $wpdb;
+    if ( ! is_admin() && $query->is_main_query() && $query->get('custom_localizacao_search') ) {
+        $groupby = "{$wpdb->posts}.ID";
+    }
+    return $groupby;
+}, 10, 2);
