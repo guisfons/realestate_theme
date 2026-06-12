@@ -792,3 +792,91 @@ function taipas_modern_customize_register( $wp_customize ) {
     ) );
 }
 add_action( 'customize_register', 'taipas_modern_customize_register' );
+
+/**
+ * Handle custom search queries for Imovel archive
+ */
+function taipas_imovel_search_query( $query ) {
+    if ( ! is_admin() && $query->is_main_query() && is_post_type_archive( 'imovel' ) ) {
+        
+        $meta_query = $query->get('meta_query') ?: array();
+        $tax_query = $query->get('tax_query') ?: array();
+
+        // 1. Negócio (Venda/Locação)
+        if ( ! empty( $_GET['negocio'] ) ) {
+            $tax_query[] = array(
+                'taxonomy' => 'tipo_negocio',
+                'field'    => 'slug',
+                'terms'    => sanitize_text_field( $_GET['negocio'] ),
+            );
+        }
+
+        // 2. Tipo de Imóvel (Casa, Apto, etc)
+        if ( ! empty( $_GET['tipo'] ) ) {
+            $tax_query[] = array(
+                'taxonomy' => 'tipo_imovel',
+                'field'    => 'slug',
+                'terms'    => sanitize_text_field( $_GET['tipo'] ),
+            );
+        }
+
+        // 3. Localização (Bairro, Cidade, CEP) OU Código do Imóvel (SKU / hero search)
+        if ( ! empty( $_GET['localizacao'] ) ) {
+            $loc = sanitize_text_field( $_GET['localizacao'] );
+            $meta_query[] = array(
+                'relation' => 'OR',
+                array(
+                    'key'     => '_address',
+                    'value'   => $loc,
+                    'compare' => 'LIKE'
+                ),
+                array(
+                    'key'     => '_cep',
+                    'value'   => $loc,
+                    'compare' => 'LIKE'
+                ),
+                array(
+                    'key'     => '_property_code',
+                    'value'   => $loc,
+                    'compare' => 'LIKE'
+                )
+            );
+        }
+
+        // 4. Código do Imóvel Específico (Advanced Search - SKU)
+        if ( ! empty( $_GET['sku'] ) ) {
+            $meta_query[] = array(
+                'key'     => '_property_code',
+                'value'   => sanitize_text_field( $_GET['sku'] ),
+                'compare' => 'LIKE'
+            );
+        }
+
+        // 5. Quartos
+        if ( ! empty( $_GET['quartos'] ) ) {
+            $meta_query[] = array(
+                'key'     => '_beds',
+                'value'   => intval( $_GET['quartos'] ),
+                'compare' => '>='
+            );
+        }
+
+        // 6. Vagas
+        if ( ! empty( $_GET['vagas'] ) ) {
+            $meta_query[] = array(
+                'key'     => '_parking',
+                'value'   => intval( $_GET['vagas'] ),
+                'compare' => '>='
+            );
+        }
+
+        if ( ! empty( $tax_query ) ) {
+            $query->set( 'tax_query', $tax_query );
+        }
+        
+        if ( ! empty( $meta_query ) ) {
+            $query->set( 'meta_query', $meta_query );
+        }
+    }
+}
+add_action( 'pre_get_posts', 'taipas_imovel_search_query' );

@@ -13,7 +13,7 @@ get_header();
         <p class="hero-subtitle">As melhores opções de compra e locação na região de Taipas, Jaraguá e arredores.</p>
         
         <div class="hero-search glass-panel">
-            <form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="search-form">
+            <form action="<?php echo esc_url( get_post_type_archive_link( 'imovel' ) ); ?>" method="get" class="search-form">
                 <div class="form-group">
                     <label><i data-lucide="tag"></i> Negócio</label>
                     <div class="radio-group-modern">
@@ -44,9 +44,9 @@ get_header();
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><i data-lucide="map-pin"></i> Onde?</label>
+                    <label><i data-lucide="map-pin"></i> Localização ou Código</label>
                     <div class="input-wrapper">
-                        <input type="text" name="localizacao" placeholder="Bairro ou Cidade">
+                        <input type="text" name="localizacao" placeholder="Busque por bairro, cidade ou código do imóvel">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">
