@@ -799,6 +799,29 @@ add_action( 'customize_register', 'taipas_modern_customize_register' );
 function taipas_imovel_search_query( $query ) {
     if ( ! is_admin() && $query->is_main_query() && is_post_type_archive( 'imovel' ) ) {
         
+        $potential_code = '';
+        if ( ! empty( $_GET['sku'] ) ) {
+            $potential_code = sanitize_text_field( $_GET['sku'] );
+        } elseif ( ! empty( $_GET['localizacao'] ) ) {
+            $potential_code = sanitize_text_field( $_GET['localizacao'] );
+        }
+
+        if ( $potential_code ) {
+            global $wpdb;
+            $code_match = $wpdb->get_var( $wpdb->prepare(
+                "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_property_code' AND meta_value = %s LIMIT 1",
+                $potential_code
+            ) );
+
+            if ( $code_match ) {
+                // Match exato de código! Ignora outros filtros (venda/locação, etc) e mostra só este imóvel.
+                $query->set( 'post__in', array( $code_match ) );
+                $query->set( 'tax_query', array() );
+                $query->set( 'meta_query', array() );
+                return;
+            }
+        }
+
         $meta_query = $query->get('meta_query') ?: array();
         $tax_query = $query->get('tax_query') ?: array();
 
