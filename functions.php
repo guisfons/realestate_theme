@@ -618,7 +618,7 @@ function taipas_admin_columns_css() {
         .column-property_thumb { width: 190px; }
         .column-property_code { width: 120px; }
         .column-property_price { width: 120px; }
-        .column-property_location { width: 25%; }
+        .column-property_location { width: 15%; }
     </style>';
 }
 add_action('admin_head', 'taipas_admin_columns_css');
