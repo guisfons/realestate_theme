@@ -508,21 +508,34 @@ add_action('manage_proprietario_posts_custom_column', 'taipas_proprietario_custo
  */
 function taipas_imovel_columns($columns) {
     $new_columns = [];
+    if (isset($columns['cb'])) {
+        $new_columns['cb'] = $columns['cb'];
+    }
+    
+    $new_columns['property_thumb'] = 'Imagem';
+    $new_columns['property_code'] = 'Código';
+    $new_columns['property_price'] = 'Valor';
+    $new_columns['property_owner'] = 'Proprietário';
+    $new_columns['property_location'] = 'Localização';
+    $new_columns['property_fees'] = 'Condomínio / IPTU';
+    
     foreach ($columns as $key => $value) {
-        if ($key === 'title') {
-            $new_columns['property_thumb'] = 'Imagem';
-        }
-        $new_columns[$key] = $value;
-        if ($key === 'title') {
-            $new_columns['property_code'] = 'Código';
-            $new_columns['property_owner'] = 'Proprietário';
-            $new_columns['property_location'] = 'Localização (CEP)';
-            $new_columns['property_fees'] = 'Condomínio / IPTU';
+        if (!in_array($key, ['cb', 'title', 'tags', 'post_tag', 'taxonomy-post_tag'])) {
+            $new_columns[$key] = $value;
         }
     }
+    
     return $new_columns;
 }
 add_filter('manage_imovel_posts_columns', 'taipas_imovel_columns');
+
+function taipas_imovel_primary_column( $default, $screen_id ) {
+    if ( 'edit-imovel' === $screen_id ) {
+        return 'property_code';
+    }
+    return $default;
+}
+add_filter('list_table_primary_column', 'taipas_imovel_primary_column', 10, 2);
 
 function taipas_imovel_custom_column($column, $post_id) {
     if ($column === 'property_thumb') {
@@ -538,7 +551,12 @@ function taipas_imovel_custom_column($column, $post_id) {
         }
     } elseif ($column === 'property_code') {
         $code = get_post_meta($post_id, '_property_code', true);
-        echo $code ? esc_html($code) : '—';
+        $display = $code ? esc_html($code) : 'Sem Código';
+        $edit_link = get_edit_post_link($post_id);
+        echo '<strong><a class="row-title" href="' . esc_url($edit_link) . '">' . $display . '</a></strong>';
+    } elseif ($column === 'property_price') {
+        $price = get_post_meta($post_id, '_price', true);
+        echo '<strong>' . esc_html($price ?: '—') . '</strong>';
     } elseif ($column === 'property_owner') {
         $owner_id = get_post_meta($post_id, '_proprietario_id', true);
         if ($owner_id) {
@@ -558,10 +576,15 @@ function taipas_imovel_custom_column($column, $post_id) {
     } elseif ($column === 'property_location') {
         $address = get_post_meta($post_id, '_address', true);
         $cep = get_post_meta($post_id, '_cep', true);
-        $loc = [];
-        if ($address) $loc[] = esc_html($address);
-        if ($cep) $loc[] = 'CEP: ' . esc_html($cep);
-        echo !empty($loc) ? implode(' | ', $loc) : '—';
+        if ($address && $cep) {
+            echo esc_html($address) . '<br><span style="display:inline-block; margin-top:8px; color:#666; font-size:12px;">CEP: ' . esc_html($cep) . '</span>';
+        } elseif ($address) {
+            echo esc_html($address);
+        } elseif ($cep) {
+            echo '<span style="color:#666; font-size:12px;">CEP: ' . esc_html($cep) . '</span>';
+        } else {
+            echo '—';
+        }
     } elseif ($column === 'property_fees') {
         $condo = get_post_meta($post_id, '_condo_fee', true);
         $iptu = get_post_meta($post_id, '_iptu_fee', true);
@@ -593,7 +616,9 @@ add_action('admin_notices', 'taipas_imovel_admin_notices');
 function taipas_admin_columns_css() {
     echo '<style>
         .column-property_thumb { width: 190px; }
-        .column-property_code { width: 100px; }
+        .column-property_code { width: 120px; }
+        .column-property_price { width: 120px; }
+        .column-property_location { width: 25%; }
     </style>';
 }
 add_action('admin_head', 'taipas_admin_columns_css');
