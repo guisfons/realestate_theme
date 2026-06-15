@@ -518,10 +518,6 @@ get_header();
             grid-template-columns: 1fr;
         }
 
-        .property-sidebar {
-            display: none;
-        }
-
         .gallery-grid {
             height: 400px;
         }
