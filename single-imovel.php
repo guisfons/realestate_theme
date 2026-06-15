@@ -527,6 +527,21 @@ get_header();
     }
 
     @media (max-width: 640px) {
+        .property-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .property-header,
+        .property-specs {
+            margin-bottom: 0;
+        }
+
+        .property-features-list {
+            margin-top: 0;
+        }
+
         .gallery-grid {
             grid-template-columns: 1fr;
             height: auto;
