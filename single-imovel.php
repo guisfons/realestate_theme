@@ -541,6 +541,10 @@ get_header();
             flex-wrap: wrap;
             gap: 2rem;
         }
+
+        .property-description {
+            margin-bottom: 0;
+        }
     }
 </style>
 
