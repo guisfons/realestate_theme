@@ -191,11 +191,24 @@ get_header();
                             ?>
 
                             <div class="agent-info">
-                                <?php $author_name = get_the_author_meta('display_name'); ?>
-                                <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($author_name); ?>&background=C8102E&color=fff"
-                                    alt="<?php echo esc_attr($author_name); ?>">
+                                <?php 
+                                $display_type = get_theme_mod( 'specialist_display_type', 'broker' );
+                                
+                                if ( $display_type === 'broker' ) {
+                                    $first_name = get_the_author_meta('first_name');
+                                    $last_name = get_the_author_meta('last_name');
+                                    $agent_name = trim($first_name . ' ' . $last_name);
+                                    if (empty($agent_name)) {
+                                        $agent_name = get_the_author_meta('display_name');
+                                    }
+                                } else {
+                                    $agent_name = get_theme_mod( 'agency_name', 'Atendimento Taipas' );
+                                }
+                                ?>
+                                <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($agent_name); ?>&background=C8102E&color=fff"
+                                    alt="<?php echo esc_attr($agent_name); ?>">
                                 <div>
-                                    <strong><?php echo esc_html($author_name); ?></strong>
+                                    <strong><?php echo esc_html($agent_name); ?></strong>
                                     <span>Especialista Local</span>
                                 </div>
                             </div>

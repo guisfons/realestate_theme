@@ -790,6 +790,53 @@ function taipas_modern_customize_register( $wp_customize ) {
         'section'  => 'taipas_footer_section',
         'type'     => 'email',
     ) );
+
+    // CRECI Number
+    $wp_customize->add_setting( 'creci_number', array(
+        'default'           => 'CRECI: 00000-J',
+        'sanitize_callback' => 'sanitize_text_field',
+    ) );
+
+    $wp_customize->add_control( 'creci_number', array(
+        'label'    => __( 'Número do CRECI', 'taipas-modern' ),
+        'section'  => 'taipas_footer_section',
+        'type'     => 'text',
+    ) );
+
+    // Imóvel Section
+    $wp_customize->add_section( 'taipas_property_section', array(
+        'title'       => __( 'Página do Imóvel', 'taipas-modern' ),
+        'priority'    => 125,
+    ) );
+
+    // Especialista Display Type
+    $wp_customize->add_setting( 'specialist_display_type', array(
+        'default'           => 'broker',
+        'sanitize_callback' => 'sanitize_key',
+    ) );
+
+    $wp_customize->add_control( 'specialist_display_type', array(
+        'label'    => __( 'Especialista Exibido', 'taipas-modern' ),
+        'section'  => 'taipas_property_section',
+        'type'     => 'radio',
+        'choices'  => array(
+            'broker' => __( 'Nome do Corretor (Autor)', 'taipas-modern' ),
+            'agency' => __( 'Nome da Imobiliária (Fixo)', 'taipas-modern' ),
+        ),
+    ) );
+
+    // Agency Name
+    $wp_customize->add_setting( 'agency_name', array(
+        'default'           => 'Atendimento Taipas',
+        'sanitize_callback' => 'sanitize_text_field',
+    ) );
+
+    $wp_customize->add_control( 'agency_name', array(
+        'label'    => __( 'Nome da Imobiliária', 'taipas-modern' ),
+        'description' => __( 'Usado caso escolha a opção Imobiliária acima.', 'taipas-modern' ),
+        'section'  => 'taipas_property_section',
+        'type'     => 'text',
+    ) );
 }
 add_action( 'customize_register', 'taipas_modern_customize_register' );
 

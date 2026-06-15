@@ -6,6 +6,9 @@
             <div class="footer-info">
                 <figure class="footer-logo"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-full.webp" alt="logo"></figure>
                 <p><?php echo wp_kses_post( get_theme_mod( 'footer_text', 'Especialistas em realizar sonhos na região de Taipas e Jaraguá. Atendimento personalizado e as melhores opções de financiamento.' ) ); ?></p>
+                <?php if ( get_theme_mod( 'creci_number', 'CRECI: 00000-J' ) ) : ?>
+                    <p class="creci-footer" style="font-weight: 600; margin-bottom: 1rem;"><?php echo esc_html( get_theme_mod( 'creci_number', 'CRECI: 00000-J' ) ); ?></p>
+                <?php endif; ?>
                 <div class="social-links">
                     <a href="#"><i data-lucide="instagram"></i></a>
                     <a href="#"><i data-lucide="facebook"></i></a>
