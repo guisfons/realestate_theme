@@ -527,6 +527,10 @@ get_header();
     }
 
     @media (max-width: 640px) {
+        .section-padding {
+            padding: 0;
+        }
+
         .property-main {
             display: flex;
             flex-direction: column;
