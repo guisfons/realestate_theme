@@ -426,10 +426,13 @@ get_header();
     }
 
     .property-description {
-        margin-bottom: 4rem;
         font-size: 1.1rem;
         line-height: 1.8;
         color: #475569;
+    }
+
+    .property-features-list {
+        margin-top: 3rem;
     }
 
     .property-description h3,
@@ -540,10 +543,6 @@ get_header();
         .property-specs {
             flex-wrap: wrap;
             gap: 2rem;
-        }
-
-        .property-description {
-            margin-bottom: 0;
         }
     }
 </style>
