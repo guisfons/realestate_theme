@@ -213,12 +213,22 @@ get_header();
                                 </div>
                             </div>
 
-                            <a href="https://wa.me/5511999999999" class="btn btn-primary w-full"
-                                style="margin-bottom: 1rem;">
+                            <?php
+                            $contact_phone = get_theme_mod('contact_phone', '(11) 3941-0000');
+                            $clean_phone = preg_replace('/[^0-9]/', '', $contact_phone);
+
+                            $contact_whatsapp = get_theme_mod('contact_whatsapp', '5511999999999');
+                            $clean_whatsapp = preg_replace('/[^0-9]/', '', $contact_whatsapp);
+                            
+                            $wa_text = urlencode('Olá, vi o imóvel REF: ' . $display_code . ' e gostaria de mais informações.');
+                            $wa_link = 'https://wa.me/' . $clean_whatsapp . '?text=' . $wa_text;
+                            ?>
+                            <a href="<?php echo esc_url($wa_link); ?>" class="btn btn-primary w-full"
+                                style="margin-bottom: 1rem;" target="_blank" rel="noopener noreferrer">
                                 <i data-lucide="message-circle" style="margin-right: 8px;"></i>
                                 WhatsApp
                             </a>
-                            <a href="tel:1139410000" class="btn btn-outline w-full">
+                            <a href="tel:<?php echo esc_attr($clean_phone); ?>" class="btn btn-outline w-full">
                                 <i data-lucide="phone" style="margin-right: 8px;"></i>
                                 Ligar Agora
                             </a>

@@ -779,6 +779,18 @@ function taipas_modern_customize_register( $wp_customize ) {
         'type'     => 'text',
     ) );
 
+    // WhatsApp Number
+    $wp_customize->add_setting( 'contact_whatsapp', array(
+        'default'           => '5511999999999',
+        'sanitize_callback' => 'sanitize_text_field',
+    ) );
+
+    $wp_customize->add_control( 'contact_whatsapp', array(
+        'label'    => __( 'WhatsApp (Apenas números, ex: 5511999999999)', 'taipas-modern' ),
+        'section'  => 'taipas_footer_section',
+        'type'     => 'text',
+    ) );
+
     // Contact Email
     $wp_customize->add_setting( 'contact_email', array(
         'default'           => 'contato@taipasimoveis.com.br',
