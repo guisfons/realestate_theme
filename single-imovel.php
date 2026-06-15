@@ -5,7 +5,8 @@
 get_header();
 ?>
 
-<?php while ( have_posts() ) : the_post(); ?>
+<?php while (have_posts()):
+    the_post(); ?>
     <article class="property-single">
         <!-- Gallery Section -->
         <section class="gallery-section">
@@ -16,17 +17,17 @@ get_header();
                     $mock_thumb = get_post_meta(get_the_ID(), '_thumbnail_url', true);
                     $gallery_ids_str = get_post_meta(get_the_ID(), '_property_gallery', true);
                     $gallery_items = $gallery_ids_str ? explode(',', $gallery_ids_str) : [];
-                    
+
                     // All images for lightbox
                     $all_images = [];
-                    
+
                     // Handle Thumbnail (Native or Mock)
                     if ($thumb_id) {
                         $all_images[] = ['id' => $thumb_id, 'url' => wp_get_attachment_image_url($thumb_id, 'full')];
                     } elseif ($mock_thumb) {
                         $all_images[] = ['id' => null, 'url' => $mock_thumb];
                     }
-                    
+
                     // Handle Gallery Items (IDs or Mock URLs)
                     foreach ($gallery_items as $item) {
                         if (is_numeric($item)) {
@@ -35,12 +36,12 @@ get_header();
                             $all_images[] = ['id' => null, 'url' => $item];
                         }
                     }
-                    
+
                     $total_count = count($all_images);
                     ?>
 
                     <div class="main-image">
-                        <?php 
+                        <?php
                         if ($total_count > 0) {
                             $first = $all_images[0];
                             $full_url = $first['url'];
@@ -64,10 +65,10 @@ get_header();
                                 $item = $all_images[$i];
                                 $full_url = $item['url'];
                                 $meta = $item['id'] ? wp_get_attachment_metadata($item['id']) : null;
-                                
+
                                 $is_third = ($i === 2);
                                 $has_more = ($is_third && $total_count > 3);
-                                
+
                                 echo '<a href="' . esc_url($full_url) . '" data-pswp-width="' . ($meta['width'] ?? 1200) . '" data-pswp-height="' . ($meta['height'] ?? 800) . '" target="_blank" class="gallery-item ' . ($has_more ? 'has-more' : '') . '">';
                                 echo '<img src="' . esc_url($full_url) . '" alt="Interior">';
                                 if ($has_more) {
@@ -87,7 +88,7 @@ get_header();
                                 echo '</a>';
                             }
                         }
-                        
+
                         // Hidden images for lightbox (from index 3 onwards)
                         for ($i = 3; $i < $total_count; $i++) {
                             $item = $all_images[$i];
@@ -109,15 +110,15 @@ get_header();
                         <div class="property-header">
                             <div class="property-meta">
                                 <?php
-                                $terms = get_the_terms( get_the_ID(), 'tipo_negocio' );
-                                $tag_text = $terms ? esc_html( $terms[0]->name ) : 'Imóvel';
+                                $terms = get_the_terms(get_the_ID(), 'tipo_negocio');
+                                $tag_text = $terms ? esc_html($terms[0]->name) : 'Imóvel';
                                 ?>
                                 <span class="tag"><?php echo $tag_text; ?></span>
                                 <?php
                                 $custom_title = get_post_meta(get_the_ID(), '_property_title', true);
                                 $custom_code = get_post_meta(get_the_ID(), '_property_code', true);
                                 $display_title = $custom_title ? $custom_title : get_the_title();
-                                $display_code = $custom_code ? $custom_code : ( $custom_title ? get_the_title() : get_the_ID() );
+                                $display_code = $custom_code ? $custom_code : ($custom_title ? get_the_title() : get_the_ID());
                                 ?>
                                 <span class="ref">REF: <?php echo esc_html($display_code); ?></span>
                             </div>
@@ -128,22 +129,22 @@ get_header();
                             <div class="spec-item">
                                 <i data-lucide="square"></i>
                                 <span>Área Útil</span>
-                                <strong><?php echo get_post_meta( get_the_ID(), '_area', true ) ?: 'N/A'; ?></strong>
+                                <strong><?php echo get_post_meta(get_the_ID(), '_area', true) ?: 'N/A'; ?></strong>
                             </div>
                             <div class="spec-item">
                                 <i data-lucide="bed"></i>
                                 <span>Quartos</span>
-                                <strong><?php echo get_post_meta( get_the_ID(), '_beds', true ) ?: '0'; ?></strong>
+                                <strong><?php echo get_post_meta(get_the_ID(), '_beds', true) ?: '0'; ?></strong>
                             </div>
                             <div class="spec-item">
                                 <i data-lucide="bath"></i>
                                 <span>Banheiros</span>
-                                <strong><?php echo get_post_meta( get_the_ID(), '_baths', true ) ?: '0'; ?></strong>
+                                <strong><?php echo get_post_meta(get_the_ID(), '_baths', true) ?: '0'; ?></strong>
                             </div>
                             <div class="spec-item">
                                 <i data-lucide="car"></i>
                                 <span>Vagas</span>
-                                <strong><?php echo get_post_meta( get_the_ID(), '_parking', true ) ?: '0'; ?></strong>
+                                <strong><?php echo get_post_meta(get_the_ID(), '_parking', true) ?: '0'; ?></strong>
                             </div>
                         </div>
 
@@ -152,29 +153,30 @@ get_header();
                             <?php the_content(); ?>
                         </div>
 
-                        <?php 
-                        $features = get_post_meta( get_the_ID(), '_features', true );
-                        if (!empty($features) && is_array($features)) : 
-                        ?>
-                        <div class="property-features-list">
-                            <h3>Diferenciais</h3>
-                            <div class="features-grid">
-                                <?php foreach ($features as $feature) : ?>
-                                    <span><i data-lucide="check"></i> <?php echo esc_html($feature); ?></span>
-                                <?php endforeach; ?>
+                        <?php
+                        $features = get_post_meta(get_the_ID(), '_features', true);
+                        if (!empty($features) && is_array($features)):
+                            ?>
+                            <div class="property-features-list">
+                                <h3>Diferenciais</h3>
+                                <div class="features-grid">
+                                    <?php foreach ($features as $feature): ?>
+                                        <span><i data-lucide="check"></i> <?php echo esc_html($feature); ?></span>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
-                        </div>
                         <?php endif; ?>
                     </div>
 
                     <!-- Sidebar Contact -->
                     <aside class="property-sidebar">
                         <div class="contact-card glass-panel">
-                            <div class="price"><?php echo get_post_meta( get_the_ID(), '_price', true ) ?: 'Sob Consulta'; ?></div>
+                            <div class="price">
+                                <?php echo get_post_meta(get_the_ID(), '_price', true) ?: 'Sob Consulta'; ?></div>
                             <?php
-                            $condo_fee = get_post_meta( get_the_ID(), '_condo_fee', true );
-                            $iptu_fee = get_post_meta( get_the_ID(), '_iptu_fee', true );
-                            
+                            $condo_fee = get_post_meta(get_the_ID(), '_condo_fee', true);
+                            $iptu_fee = get_post_meta(get_the_ID(), '_iptu_fee', true);
+
                             $fees = [];
                             if (!empty($condo_fee)) {
                                 $fees[] = 'Condomínio: ' . esc_html($condo_fee);
@@ -182,21 +184,24 @@ get_header();
                             if (!empty($iptu_fee)) {
                                 $fees[] = 'IPTU: ' . esc_html($iptu_fee);
                             }
-                            
+
                             if (!empty($fees)) {
                                 echo '<p class="condo">' . implode(' • ', $fees) . '</p>';
                             }
                             ?>
-                            
+
                             <div class="agent-info">
-                                <img src="https://ui-avatars.com/api/?name=Taipas+Imoveis&background=C8102E&color=fff" alt="Agent">
+                                <?php $author_name = get_the_author_meta('display_name'); ?>
+                                <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($author_name); ?>&background=C8102E&color=fff"
+                                    alt="<?php echo esc_attr($author_name); ?>">
                                 <div>
-                                    <strong>Atendimento Taipas</strong>
+                                    <strong><?php echo esc_html($author_name); ?></strong>
                                     <span>Especialista Local</span>
                                 </div>
                             </div>
 
-                            <a href="https://wa.me/5511999999999" class="btn btn-primary w-full" style="margin-bottom: 1rem;">
+                            <a href="https://wa.me/5511999999999" class="btn btn-primary w-full"
+                                style="margin-bottom: 1rem;">
                                 <i data-lucide="message-circle" style="margin-right: 8px;"></i>
                                 WhatsApp
                             </a>
@@ -227,13 +232,15 @@ get_header();
         overflow: hidden;
     }
 
-    .main-image, .side-images {
+    .main-image,
+    .side-images {
         height: 100%;
         max-height: 100%;
         overflow: hidden;
     }
 
-    .main-image a, .side-images a {
+    .main-image a,
+    .side-images a {
         display: block;
         width: 100%;
         height: 100%;
@@ -242,7 +249,8 @@ get_header();
         border-radius: 12px;
     }
 
-    .main-image img, .side-images img {
+    .main-image img,
+    .side-images img {
         width: 100%;
         height: 100%;
         max-height: 100%;
@@ -262,14 +270,52 @@ get_header();
         gap: 4rem;
     }
 
-    .property-header { margin-bottom: 3rem; }
-    .property-meta { display: flex; gap: 1rem; margin-bottom: 1rem; }
-    .property-meta .tag { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; }
-    .property-meta .ref { color: var(--text-muted); font-size: 0.75rem; font-weight: 600; }
-    
-    .property-header h1 { font-size: 2.5rem; margin-bottom: 0.75rem; color: var(--secondary); line-height: 1.2; }
-    .property-header .location { display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 1.1rem; }
-    .property-header .location i { width: 1.25rem; height: 1.25rem; color: var(--primary); }
+    .property-header {
+        margin-bottom: 3rem;
+    }
+
+    .property-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .property-meta .tag {
+        background: var(--primary);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .property-meta .ref {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .property-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+        color: var(--secondary);
+        line-height: 1.2;
+    }
+
+    .property-header .location {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-muted);
+        font-size: 1.1rem;
+    }
+
+    .property-header .location i {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: var(--primary);
+    }
 
     .property-specs {
         display: flex;
@@ -281,8 +327,12 @@ get_header();
         border-radius: 20px;
     }
 
-    .gallery-item { position: relative; display: block; height: 100%; }
-    
+    .gallery-item {
+        position: relative;
+        display: block;
+        height: 100%;
+    }
+
     .more-overlay {
         position: absolute;
         top: 0;
@@ -296,7 +346,8 @@ get_header();
         justify-content: center;
         border-radius: 12px;
         transition: all 0.3s ease;
-        opacity: 1; /* Always visible if present */
+        opacity: 1;
+        /* Always visible if present */
         pointer-events: none;
     }
 
@@ -304,7 +355,7 @@ get_header();
         color: white;
         font-size: 1.4rem;
         font-weight: 700;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         transition: transform 0.3s ease;
     }
 
@@ -322,13 +373,49 @@ get_header();
         filter: grayscale(40%);
     }
 
-    .spec-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.35rem; }
-    .spec-item i { width: 26px; height: 26px; margin-bottom: 0.5rem; color: var(--primary); stroke-width: 1.5; }
-    .spec-item span { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-    .spec-item strong { font-size: 1.35rem; color: var(--secondary); font-weight: 700; }
+    .spec-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.35rem;
+    }
 
-    .property-description { margin-bottom: 4rem; font-size: 1.1rem; line-height: 1.8; color: #475569; }
-    .property-description h3, .property-features-list h3 { font-size: 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid var(--primary); padding-left: 1rem; }
+    .spec-item i {
+        width: 26px;
+        height: 26px;
+        margin-bottom: 0.5rem;
+        color: var(--primary);
+        stroke-width: 1.5;
+    }
+
+    .spec-item span {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .spec-item strong {
+        font-size: 1.35rem;
+        color: var(--secondary);
+        font-weight: 700;
+    }
+
+    .property-description {
+        margin-bottom: 4rem;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #475569;
+    }
+
+    .property-description h3,
+    .property-features-list h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--primary);
+        padding-left: 1rem;
+    }
 
     .features-grid {
         display: grid;
@@ -336,31 +423,105 @@ get_header();
         gap: 1rem;
     }
 
-    .features-grid span { display: flex; align-items: center; gap: 0.75rem; color: var(--text-main); font-weight: 500; font-size: 1rem; }
-    .features-grid i { color: #10B981; width: 20px; height: 20px; flex-shrink: 0; }
+    .features-grid span {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text-main);
+        font-weight: 500;
+        font-size: 1rem;
+    }
 
-    .contact-card { padding: 2.5rem; position: sticky; top: 120px; }
-    .contact-card .price { font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem; }
-    .contact-card .condo { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 2rem; }
+    .features-grid i {
+        color: #10B981;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
 
-    .agent-info { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
-    .agent-info img { width: 48px; height: 48px; border-radius: 50%; }
-    .agent-info strong { display: block; color: var(--secondary); }
-    .agent-info span { font-size: 0.875rem; color: var(--text-muted); }
+    .contact-card {
+        padding: 2.5rem;
+        position: sticky;
+        top: 120px;
+    }
 
-    .sidebar-help { margin-top: 2rem; font-size: 0.875rem; color: var(--text-muted); text-align: center; }
+    .contact-card .price {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-card .condo {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+    }
+
+    .agent-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .agent-info img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+    }
+
+    .agent-info strong {
+        display: block;
+        color: var(--secondary);
+    }
+
+    .agent-info span {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+    }
+
+    .sidebar-help {
+        margin-top: 2rem;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        text-align: center;
+    }
 
     @media (max-width: 1024px) {
-        .property-layout { grid-template-columns: 1fr; }
-        .property-sidebar { display: none; }
-        .gallery-grid { height: 400px; }
+        .property-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .property-sidebar {
+            display: none;
+        }
+
+        .gallery-grid {
+            height: 400px;
+        }
     }
 
     @media (max-width: 640px) {
-        .gallery-grid { grid-template-columns: 1fr; height: auto; }
-        .side-images { display: none; }
-        .property-header h1 { font-size: 2rem; }
-        .property-specs { flex-wrap: wrap; gap: 2rem; }
+        .gallery-grid {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+
+        .side-images {
+            display: none;
+        }
+
+        .property-header h1 {
+            font-size: 2rem;
+        }
+
+        .property-specs {
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
     }
 </style>
 
