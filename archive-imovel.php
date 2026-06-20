@@ -105,7 +105,7 @@ get_header();
 
     .archive-layout {
         display: grid;
-        grid-template-columns: 280px 1fr;
+        grid-template-columns: 350px 1fr;
         gap: 3rem;
     }
 
@@ -113,7 +113,7 @@ get_header();
     .sidebar-box h3 { margin-bottom: 1.5rem; font-size: 1.25rem; }
 
     .sidebar-form .form-group { margin-bottom: 1.5rem; }
-    .sidebar-form label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--text-muted); }
+    .sidebar-form label { display: flex; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--text-muted); }
     .sidebar-form select, .sidebar-form input[type="range"] { width: 100%; padding: 0.5rem; }
 
     .radio-group { display: flex; gap: 1rem; }
