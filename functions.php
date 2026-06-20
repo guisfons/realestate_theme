@@ -941,6 +941,9 @@ function taipas_imovel_search_query( $query ) {
         if ( ! empty( $meta_query ) ) {
             $query->set( 'meta_query', $meta_query );
         }
+
+        // Display all properties since there's no pagination on the archive template yet
+        $query->set( 'posts_per_page', -1 );
     }
 }
 add_action( 'pre_get_posts', 'taipas_imovel_search_query' );
