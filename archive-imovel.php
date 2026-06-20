@@ -17,13 +17,16 @@ get_header();
             <aside class="filters-sidebar">
                 <div class="glass-panel sidebar-box">
                     <h3><i data-lucide="filter"></i> Filtros</h3>
-                    <form action="#" class="sidebar-form">
+                    <form action="<?php echo esc_url( get_post_type_archive_link( 'imovel' ) ); ?>" method="GET" class="sidebar-form">
                         <div class="form-group">
                             <label>Negócio</label>
                             <div class="radio-group-modern">
-                                <input type="radio" name="negocio" id="venda" checked>
+                                <?php $current_negocio = isset( $_GET['negocio'] ) ? sanitize_text_field( $_GET['negocio'] ) : ''; ?>
+                                <input type="radio" name="negocio" value="" id="todos_negocios" <?php checked( $current_negocio, '' ); ?>>
+                                <label for="todos_negocios">Todos</label>
+                                <input type="radio" name="negocio" value="venda" id="venda" <?php checked( $current_negocio, 'venda' ); ?>>
                                 <label for="venda">Venda</label>
-                                <input type="radio" name="negocio" id="locacao">
+                                <input type="radio" name="negocio" value="locacao" id="locacao" <?php checked( $current_negocio, 'locacao' ); ?>>
                                 <label for="locacao">Locação</label>
                             </div>
                         </div>
@@ -31,11 +34,17 @@ get_header();
                         <div class="form-group">
                             <label><i data-lucide="home"></i> Tipo de Imóvel</label>
                             <div class="input-wrapper">
-                                <select>
-                                    <option>Todos os tipos</option>
-                                    <option>Casa</option>
-                                    <option>Apartamento</option>
-                                    <option>Terreno</option>
+                                <?php
+                                $current_tipo = isset( $_GET['tipo'] ) ? sanitize_text_field( $_GET['tipo'] ) : '';
+                                $tipos_imovel = get_terms( array( 'taxonomy' => 'tipo_imovel', 'hide_empty' => false ) );
+                                ?>
+                                <select name="tipo">
+                                    <option value="">Todos os tipos</option>
+                                    <?php if ( ! is_wp_error( $tipos_imovel ) && ! empty( $tipos_imovel ) ) : ?>
+                                        <?php foreach ( $tipos_imovel as $term ) : ?>
+                                            <option value="<?php echo esc_attr( $term->slug ); ?>" <?php selected( $current_tipo, $term->slug ); ?>><?php echo esc_html( $term->name ); ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                         </div>
@@ -43,24 +52,14 @@ get_header();
                         <div class="form-group">
                             <label><i data-lucide="bed"></i> Dormitórios</label>
                             <div class="input-wrapper">
-                                <select>
-                                    <option>Qualquer</option>
-                                    <option>1+</option>
-                                    <option>2+</option>
-                                    <option>3+</option>
+                                <?php $current_quartos = isset( $_GET['quartos'] ) ? sanitize_text_field( $_GET['quartos'] ) : ''; ?>
+                                <select name="quartos">
+                                    <option value="">Qualquer</option>
+                                    <option value="1" <?php selected( $current_quartos, '1' ); ?>>1+</option>
+                                    <option value="2" <?php selected( $current_quartos, '2' ); ?>>2+</option>
+                                    <option value="3" <?php selected( $current_quartos, '3' ); ?>>3+</option>
+                                    <option value="4" <?php selected( $current_quartos, '4' ); ?>>4+</option>
                                 </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label><i data-lucide="dollar-sign"></i> Preço Máximo</label>
-                            <div class="price-range-wrapper">
-                                <input type="range" min="100000" max="2000000" step="50000" id="price-slider">
-                                <div class="range-values">
-                                    <span>R$ 100k</span>
-                                    <span id="price-value" style="color: var(--primary); font-weight: 700;">R$ 1M</span>
-                                    <span>R$ 2M+</span>
-                                </div>
                             </div>
                         </div>
 
@@ -74,11 +73,12 @@ get_header();
             <!-- Results -->
             <div class="archive-results">
                 <div class="results-meta">
-                    <span>Encontrados: <strong>24 imóveis</strong></span>
-                    <select>
-                        <option>Mais recentes</option>
-                        <option>Menor preço</option>
-                        <option>Maior preço</option>
+                    <?php global $wp_query; ?>
+                    <span>Encontrados: <strong><?php echo esc_html( $wp_query->found_posts ); ?> imóveis</strong></span>
+                    <select onchange="if(this.value) { window.location.href=this.value; }">
+                        <option value="">Ordenar por</option>
+                        <option value="<?php echo esc_url( add_query_arg( 'orderby', 'date' ) ); ?>">Mais recentes</option>
+                        <option value="<?php echo esc_url( add_query_arg( 'orderby', 'title' ) ); ?>">Alfabética</option>
                     </select>
                 </div>
 

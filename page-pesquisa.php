@@ -31,12 +31,14 @@ get_header();
                         <div class="form-group">
                             <label>Tipo de Imóvel</label>
                             <div class="input-wrapper">
+                                <?php $tipos_imovel = get_terms( array( 'taxonomy' => 'tipo_imovel', 'hide_empty' => false ) ); ?>
                                 <select name="tipo">
                                     <option value="">Todos os tipos</option>
-                                    <option value="casa">Casa</option>
-                                    <option value="apartamento">Apartamento</option>
-                                    <option value="terreno">Terreno</option>
-                                    <option value="comercial">Comercial</option>
+                                    <?php if ( ! is_wp_error( $tipos_imovel ) && ! empty( $tipos_imovel ) ) : ?>
+                                        <?php foreach ( $tipos_imovel as $term ) : ?>
+                                            <option value="<?php echo esc_attr( $term->slug ); ?>"><?php echo esc_html( $term->name ); ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                         </div>
